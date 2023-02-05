@@ -22,3 +22,4 @@ users = Table(
     Column('surname', String(20)),
     Column('role_id', Integer, ForeignKey('roles.id'))
 )
+
