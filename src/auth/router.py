@@ -1,9 +1,11 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Form
 from sqlalchemy import select, insert, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.responses import HTMLResponse
+from fastapi.requests import Request
+from fastapi.responses import Response, RedirectResponse
 
 from database import get_session
 
@@ -74,36 +76,37 @@ async def delete_user(id: int, session: AsyncSession = Depends(get_session)):
 secret = 'johan'
 
 @auth_router.post('/login')
-async def user_login(form_data: UserLogin, session: AsyncSession = Depends(get_session)):
-    print(form_data)
+async def user_login(email: str = Form(), password: str = Form(), session: AsyncSession = Depends(get_session)):
     try:
-        user = select(users).where(users.c.email == form_data.email)
+        user = select(users).where(users.c.email == email)
         get_user = await session.execute(user)
-        if form_data.password == get_user.fetchone()[3]:
-            token = jwt.encode({'email': form_data.email, 'password': form_data.password}, secret, algorithm='HS256')
-            return {"bearer": token}
+        if password == get_user.fetchone()[3]:
+            token = jwt.encode({'email': email, 'password': password}, secret, algorithm='HS256')
+            print(token)
+            return RedirectResponse('http://127.0.0.1:8000/user_page', status_code=301)
         else:
             return {"message": "Email or password not valid"}
+
     except Exception:
         return {"message": "Email or password not valid"}
 
 
 
+
 @auth_router.post('/auth')
-async def get_authorization(token: str, session: AsyncSession = Depends(get_session)) -> User:
+async def get_authorization(request: Request, session: AsyncSession = Depends(get_session)):
+    token = request.get('headers')[6][1]
     try:
         decoded_token = jwt.decode(token, secret, algorithms=['HS256'])
         user = select(users).where(users.c.email == decoded_token['email'])
         get_user = await session.execute(user)
-        return get_user.first()
+        id = get_user.first()[0]
+        return {'id': id}
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
-
-
 
 

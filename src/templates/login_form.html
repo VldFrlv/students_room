@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post" id="my_form" action="http://127.0.0.1:8000/auth/login">
+    <input type="text" name="email" id="email"> <br>
+    <input type="password" name="password" id="password"> <br>
+    <button>ok</button>
+<!--    <input type="button" value="Отправить" id="send_data">-->
+</form>
+<script src="static/index.js"></script>
+<script>
+    // let input_button = document.getElementById('send_data')
+    // input_button.addEventListener('click', get_token)
+    //
+    // function get_token() {
+    //     let form = document.getElementById('my_form')
+    //     // let form_data = new FormData(form)
+    //     let payload = {
+    //         "email": document.getElementById('email').value,
+    //         "password": document.getElementById('password').value
+    //     }
+    //     fetch('http://127.0.0.1:8000/auth/login', {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": 'application/json'
+    //         },
+    //         body: JSON.stringify(payload)})}
+        // }).then(resp => resp.json()).then(a => {
+        //     // document.cookie = `bearer = ${a.bearer}`
+        //     // console.log(a.bearer)
+        //     localStorage.setItem('bbbb', a.bearer)
+        //     })
+
+        // window.location.replace(`http://127.0.0.1:8000/user_page`)
+        // console.log(localStorage.getItem('bbbb'))
+
+</script>
+</body>
+</html>
