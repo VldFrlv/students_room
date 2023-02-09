@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
+from fastapi.middleware.cors import CORSMiddleware
 from jose import jwt
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,6 +21,18 @@ app = FastAPI(title='Johan')
 app.include_router(auth_router)
 app.include_router(admin_router)
 
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.mount('/static', StaticFiles(directory='static'))
 
 templates = Jinja2Templates(directory='templates')
@@ -31,7 +44,7 @@ async def get_login_form(request: Request):
 
 
 @app.get('/user_page', response_class=HTMLResponse)
-async def get_user_page( request: Request, session: AsyncSession = Depends(get_session)):
+async def get_user_page(request: Request, session: AsyncSession = Depends(get_session)):
     # try:
     #     bearer = request._cookies.get('bearer')
     #     decoded_token = jwt.decode(bearer, secret, algorithms=['HS256'])
@@ -46,6 +59,7 @@ async def get_user_page( request: Request, session: AsyncSession = Depends(get_s
     #         detail="Invalid authentication credentials",
     #         headers={"WWW-Authenticate": "Bearer"},
     #     )
+
 
 @app.get("/typer")
 async def redirect_typer():

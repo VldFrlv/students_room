@@ -76,21 +76,18 @@ async def delete_user(id: int, session: AsyncSession = Depends(get_session)):
 secret = 'johan'
 
 @auth_router.post('/login')
-async def user_login(email: str = Form(), password: str = Form(), session: AsyncSession = Depends(get_session)):
+async def user_login(data: UserLogin, session: AsyncSession = Depends(get_session)):
     try:
-        user = select(users).where(users.c.email == email)
+        user = select(users).where(users.c.email == data.email)
         get_user = await session.execute(user)
-        if password == get_user.fetchone()[3]:
-            token = jwt.encode({'email': email, 'password': password}, secret, algorithm='HS256')
-            print(token)
-            return RedirectResponse('http://127.0.0.1:8000/user_page', status_code=301)
+        if data.password == get_user.fetchone()[3]:
+            token = jwt.encode({'email': data.email, 'password': data.password}, secret, algorithm='HS256')
+            return {'bearer': token}
         else:
             return {"message": "Email or password not valid"}
 
     except Exception:
         return {"message": "Email or password not valid"}
-
-
 
 
 @auth_router.post('/auth')
