@@ -10,7 +10,7 @@ from sqlalchemy import select
 from fastapi.responses import RedirectResponse
 
 from auth.models import users
-from auth.router import auth_router, secret
+from auth.router import auth_router
 from app_admin.router import admin_router
 
 from fastapi.templating import Jinja2Templates
@@ -29,6 +29,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
+
     allow_methods=["*"],
     allow_headers=["*"],
 )

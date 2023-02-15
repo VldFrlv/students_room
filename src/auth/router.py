@@ -13,14 +13,14 @@ from database import get_session
 from .models import users
 from .schemas import User, UserPatch, UserLogin
 
-from jose import jwt
+from .service import Auth
 
 auth_router = APIRouter(
     prefix='/auth',
     tags=['Auth']
 )
 
-secret = 'johan'
+auth = Auth()
 
 
 @auth_router.post('/login')
@@ -29,48 +29,29 @@ async def user_login(data: UserLogin, session: AsyncSession = Depends(get_sessio
         user = select(users).where(users.c.email == data.email)
         get_user = await session.execute(user)
         if data.password == get_user.fetchone()[3]:
-            access = jwt.encode({'email': data.email, 'password': data.password,
-                                 "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=2)}, secret,
-                                algorithm='HS256')
-            refresh = jwt.encode({'email': data.email, 'password': data.password,
-                                 "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=5)}, secret,
-                                algorithm='HS256')
-            return {
-                'access': access,
-                'refresh': refresh
-            }
+            access_token = auth.encode_access_token(data.email)
+            refresh_token = auth.encode_refresh_token(data.email)
+            return {'access_token': access_token, 'refresh_token': refresh_token}
         else:
-            return {"message": "Email or password not valid"}
-
+            raise HTTPException(status_code=401, detail='Email or password not valid')
     except Exception:
-        return {"message": "Email or password not valid"}
+        raise HTTPException(status_code=401, detail='Email or password not valid')
 
 
-# def authorization(handler: Callable):
-#
-#     def inner(*args, **kwagrs):
+@auth_router.get('/refresh')
+async def refresh_token(request: Request):
+    refresh_token = request.cookies.get('refresh')
+    return auth.get_new_refresh_or_401(refresh_token)
+
+
+@auth_router.get('/authorization')
+async def authorization(request: Request):
+    print(request.cookies)
+    # access_token = request.cookies.get('access_token')
+    # print(access_token)
+    # return auth.decode_access_token(access_token)
+    return {'ok': 1}
 
 
 
-@auth_router.post('/authorization')
-async def authorization(request: Request, session: AsyncSession = Depends(get_session)):
-    access = request
 
-
-
-
-@auth_router.post('/auth')
-async def get_authorization(request: Request, session: AsyncSession = Depends(get_session)):
-    token = request.get('headers')[6][1]
-    try:
-        decoded_token = jwt.decode(token, secret, algorithms=['HS256'])
-        user = select(users).where(users.c.email == decoded_token['email'])
-        get_user = await session.execute(user)
-        id = get_user.first()[0]
-        return {'id': id}
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
