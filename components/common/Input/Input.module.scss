@@ -1,0 +1,18 @@
+input {
+  background: #d9dede;
+  border-radius: 10px;
+  padding: 18px 20px 15px 20px;
+  font-family: IBMPlexSans;
+  font-style: normal;
+  font-weight: 400;
+  color: black;
+  font-size: 18px;
+
+  &::placeholder {
+    font-family: IBMPlexSans;
+    font-style: normal;
+    font-weight: 400;
+    color: gray;
+    font-size: 18px;
+  }
+}

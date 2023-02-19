@@ -1,0 +1,137 @@
+.asideWrapper {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  box-shadow: 0px 0px 20px rgb(47 90 83 / 18%);
+  width: 300px;
+  min-height: 100vh;
+}
+
+.asideImageWrapper {
+  width: 100%;
+  height: 150px;
+  margin-bottom: 20px;
+
+  & img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.asideContent {
+  padding: 0 15px;
+}
+
+.asideTitle {
+  font-family: IBMPlexSans;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 18px;
+  color: black;
+  line-height: 120%;
+  margin-bottom: 20px;
+}
+
+.asideProgressBar {
+  background: #E4E4E4;
+  border-radius: 10px;
+  height: 10px;
+  margin-bottom: 20px;
+}
+
+.progress {
+  border-radius: 10px;
+  width: 45%;
+  height: 100%;
+  background: #2F5A53;
+}
+
+.progressTitle {
+  font-family: IBMPlexSans;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 18px;
+  color: black;
+  line-height: 120%;
+  text-align: center;
+  margin-bottom: 20px;
+
+  & span {
+    font-family: IBMPlexSans;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 22px;
+    color: black;
+    line-height: 120%;
+  }
+}
+
+.progressSubTitle {
+  font-family: IBMPlexSans;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 12px;
+  color: gray;
+  line-height: 120%;
+  text-align: center;
+}
+
+.asideContentLine {
+  margin-top: 20px;
+  height: 1px;
+  background: gray;
+  opacity: 0.2;
+}
+
+.asideService {
+  padding: 15px;
+}
+
+.asideServiceList {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.asideListItemWrapper {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+
+  &:hover {
+    &:before {
+      content: '';
+      position: absolute;
+      left: -15px;
+      width: 2px;
+      height: 100%;
+      background: black;
+    }
+
+    & .listItemTitle {
+      color: black;
+    }
+  }
+}
+
+.listItemImage {
+  width: 30px;
+  height: 30px;
+
+  & img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.listItemTitle {
+  font-family: IBMPlexSans;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  color: gray;
+  line-height: 120%;
+}

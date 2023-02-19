@@ -30,8 +30,6 @@ const Login = () => {
                 setStatusError(null)
             }
             return resp.json()}).then(a => {
-            document.cookie = `access = ${a.access_token}`
-            document.cookie = `refresh = ${a.refresh_token}`
             localStorage.setItem('access', a.access_token)
             localStorage.setItem('refresh', a.refresh_token)
             if (a.access_token && a.refresh_token){
